@@ -1,48 +1,66 @@
-body{
+body {
     background-color: #f5f5a4;
 }
+
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
+
 .quiz-upload {
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
     background-color: rgb(255, 255, 255);
     padding: 20px;
     border-radius: 10px;
 }
 
+.quiz-upload button{
+    width: 120px;
+    background-color: rgb(48, 114, 255);
+    color: white;
+}
 
 li {
     list-style: none;
 }
 
 .list-container {
-    padding: 20px;
-    margin: 10px;
-    background-color: lightgray;
-    border-radius: 10px;        
+    padding: 15px;
+    background-color: rgb(48, 114, 255);
+    border-radius: 7px;
     display: flex;
     flex-direction: row;
+    max-width: 500px;
+    margin: 0 auto;
     justify-content: space-between;
-}
-#name{
-    font-size: 1.5rem;
+    gap  : 10px;
 }
 
-#btn {
-padding: 12px;
-border: none;
-align-self: center;
-border-radius: 10px;
-background-color: rgb(48, 114, 255);
-color: white;
-cursor: pointer;
+#name {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: white;
+}
+b{
+    color: white;
+
 }
 
-#btn:hover {
-padding: 12px;
-border: none;
-border-radius: 10px;
-background-color: rgb(0, 81, 255);
-color: white;
+.btn {
+    padding: 12px;
+    border: none;
+    align-self: center;
+    border-radius: 10px;
+    background-color: white;
+    color: rgb(48, 114, 255);
+    cursor: pointer;
+}
+
+.btn:hover {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background-color: gainsboro;
+    color: black;
 }

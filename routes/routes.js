@@ -74,47 +74,21 @@ router.post('/uploadExcel', upload, async (req, res) => {
 
         if (count > 0) {
             console.log("Exists");
-            Quiz.find().exec().then(quizzes => {
-                // res.redirect('/home');
-                res.render('home', { quizzes: quizzes.reverse() });
-            });
-
+                res.redirect('/home');
         }
         else {
             quiz.save();
             fs.unlinkSync('./uploads' + "/" + filename);
             
             Quiz.find().exec().then(quizzes => {
-                // res.redirect('/home');
-                res.render('home', {
-                    quizzes: quizzes.reverse(),type: "success", message: "File uploaded Successfully"
-                });
+                res.redirect('/home');
+
             });
 
         }
     });
 
 
-    //     const fileName = Date.now() + "-" + path.basename(file.originalname);
-    //   const fileUpload = bucket.file(fileName);
-
-    //   const blobStream = fileUpload.createWriteStream({
-    //     metadata: {
-    //       contentType: file.mimetype
-    //     }
-    //   });
-
-    //   blobStream.on("error", (error) => {
-    //     console.log(error);
-    //     res.status(500).send("Unable to upload file.");
-    //   });
-
-    //   blobStream.on("finish", () => {
-    //     res.status(200).send("File uploaded successfully.");
-    //   });
-
-    //   blobStream.end(file.buffer);
-    // res.redirect("home");
 })
 
 router.post('/getResult', async (req, res) => {
