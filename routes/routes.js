@@ -79,10 +79,8 @@ router.post('/uploadExcel', upload, async (req, res) => {
         else {
             quiz.save();
             fs.unlinkSync('./uploads' + "/" + filename);
-            
             Quiz.find().exec().then(quizzes => {
                 res.redirect('/home');
-
             });
 
         }
@@ -101,7 +99,7 @@ router.post('/getResult', async (req, res) => {
         const workbook = new excel.Workbook();
         const worksheet = workbook.addWorksheet('Quiz Results');
 
-        worksheet.addRow(['Name', 'Email', 'Phone', 'ScoreObtained']);
+        worksheet.addRow(['Name', 'Email', 'Phone', 'ScoreObtained' ,'Institution']);
 
         users.forEach(user => {
             worksheet.addRow([
@@ -109,6 +107,7 @@ router.post('/getResult', async (req, res) => {
                 user.email,
                 user.phone,
                 user.score,
+                user.institution
             ]);
         });
 

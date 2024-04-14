@@ -1,15 +1,20 @@
-body {
-    background-color: #f5f5a4;
-}
-
 * {
     font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    overflow: hidden;
+    object-fit: contain;
+    background-image: url(logo.png);
+    background-blend-mode: soft-light;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #fff20081;
 }
 
 .quiz-upload {
     margin-top: 20px;
     margin-bottom: 20px;
-
     background-color: rgb(255, 255, 255);
     padding: 20px;
     border-radius: 10px;
@@ -23,18 +28,26 @@ body {
 
 li {
     list-style: none;
+    
+    
+}
+
+.item-container{
+    padding: 1rem;
+    background-color: rgb(48, 114, 255);
+    margin: 0.5rem;
+    border-radius: 8px;
 }
 
 .list-container {
-    padding: 15px;
-    background-color: rgb(48, 114, 255);
+    padding: 10px;
     border-radius: 7px;
     display: flex;
-    flex-direction: row;
-    max-width: 500px;
+    flex-direction: column;
+    max-width: 700px;
     margin: 0 auto;
     justify-content: space-between;
-    gap  : 10px;
+    gap  : 1rem;
 }
 
 #name {

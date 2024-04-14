@@ -7,6 +7,6 @@ const adminSchema = new mongoose.Schema({
     password:{
         type : String
     }
-})
+},{collection : 'admin'});
 
 module.exports = mongoose.model('Admin',adminSchema)
