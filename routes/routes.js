@@ -1,17 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const Admin = require('../models/admin');
-const multer = require('multer');
+const expressFileUpload = require('express-fileupload');
 const { User, Quiz } = require('../models/quiz')
 const admin = require("firebase-admin");
 const fs = require('fs');
 const excel = require('exceljs');
-const serviceAccount = require("../kickdrugsquiz-firebase-adminsdk-zf1s8-8b0a1d8a4d.json");
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: "kickdrugsquiz.appspot.com"
-});
+const { initializeApp } = require("firebase/app");
+const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
+
+router.use(expressFileUpload());
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDs0jFu6ENRcRR0bCILxpQwl1KKSJ-VFeY",
+    authDomain: "kickdrugsquiz.firebaseapp.com",
+    projectId: "kickdrugsquiz",
+    storageBucket: "kickdrugsquiz.appspot.com",
+    messagingSenderId: "318148898095",
+    appId: "1:318148898095:web:919faa00e0de4b595c05da",
+    measurementId: "G-7VTFER1D89"
+  };
+
+const firebaseApp = initializeApp(firebaseConfig);
+
 
 
 router.get('/', (req, res) => {
@@ -39,55 +51,58 @@ router.post('/details', async (req, res) => {
 
 
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads');
-    },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toDateString() + ".xlsx")
-    },
-});
-var upload = multer({
-    storage: storage,
-}).single('excel');
 
 
-
-router.post('/uploadExcel', upload, async (req, res) => {
-    const file = req.file;
-    if (!file) {
-        return res.status(400).send("No file uploaded.");
+router.post('/uploadExcel', async (req, res) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
     }
-
-    const bucket = admin.storage().bucket();
+    const file = req.files.excel;
     var filename = new Date().toDateString() + ".xlsx";
-    await bucket.upload(file.path, {
-        destination: filename,
-    });
 
-    const quiz = new Quiz({
-        quiz_name: filename
-    })
+    let storage = getStorage(firebaseApp);
+    let storageRef = ref(storage, '/' + filename);
 
-    Quiz.countDocuments({ quiz_name: filename }).then(count => {
-        console.log("count", count);
+    let metadata = {
+        contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    };
 
-        if (count > 0) {
-            console.log("Exists");
-                res.redirect('/home');
-        }
-        else {
-            quiz.save();
-            fs.unlinkSync('./uploads' + "/" + filename);
-            Quiz.find().exec().then(quizzes => {
-                res.redirect('/home');
+    let uploadTask = uploadBytesResumable(storageRef, file.data, metadata);
+
+    uploadTask.on('state_changed',
+        (snapshot) => {
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+        },
+        (error) => {
+            res.status(500).send(error);
+        },
+        () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                console.log('File available at', downloadURL);
+                const quiz = new Quiz({
+                    quiz_name: filename
+                })
+
+                Quiz.countDocuments({ quiz_name: filename }).then(count => {
+                    console.log("count", count);
+
+                    if (count > 0) {
+                        console.log("Exists");
+                        res.redirect('/home');
+                    }
+                    else {
+                        quiz.save();
+                        Quiz.find().exec().then(quizzes => {
+                            res.redirect('/home');
+                        });
+
+                    }
+                });
+
             });
-
-        }
-    });
-
-
-})
+        })
+});
 
 router.post('/getResult', async (req, res) => {
     const quizId = req.body.quizId;
@@ -99,15 +114,15 @@ router.post('/getResult', async (req, res) => {
         const workbook = new excel.Workbook();
         const worksheet = workbook.addWorksheet('Quiz Results');
 
-        worksheet.addRow(['Name', 'Email', 'Phone', 'ScoreObtained' ,'Institution']);
+        worksheet.addRow(['Name', 'Email', 'Phone','Institution','ScoreObtained']);
 
         users.forEach(user => {
             worksheet.addRow([
                 user.name,
                 user.email,
                 user.phone,
-                user.score,
-                user.institution
+                user.institution,
+                user.score
             ]);
         });
 
