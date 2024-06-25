@@ -6,6 +6,7 @@ const { User, Quiz } = require('../models/quiz')
 const admin = require("firebase-admin");
 const fs = require('fs');
 const excel = require('exceljs');
+const moment = require('moment');
 
 const { initializeApp } = require("firebase/app");
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
@@ -58,7 +59,8 @@ router.post('/uploadExcel', async (req, res) => {
         return res.status(400).send('No files were uploaded.');
     }
     const file = req.files.excel;
-    var filename = new Date().toDateString() + ".xlsx";
+    const filename = moment().tz('Asia/Kolkata').format('ddd MMM DD YYYY') + ".xlsx";
+
 
     let storage = getStorage(firebaseApp);
     let storageRef = ref(storage, '/' + filename);
