@@ -1,12 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path')
 const mongoose = require('mongoose');
 const session = require('express-session');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-mongoose.connect("mongodb://localhost:27017/KickDrugsQuiz");
+mongoose.connect(process.env.DB_URL);
 const db = mongoose.connection;
 
 db.on('error',(error)=>{

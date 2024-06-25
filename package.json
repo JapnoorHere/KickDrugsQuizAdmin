@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "busboy": "^1.6.0",
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.9",
     "exceljs": "^4.4.0",
     "express": "^4.19.1",

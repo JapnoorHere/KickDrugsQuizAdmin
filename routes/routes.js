@@ -11,18 +11,18 @@ const { initializeApp } = require("firebase/app");
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
 
 router.use(expressFileUpload());
-
 const firebaseConfig = {
-    apiKey: "AIzaSyDs0jFu6ENRcRR0bCILxpQwl1KKSJ-VFeY",
-    authDomain: "kickdrugsquiz.firebaseapp.com",
-    projectId: "kickdrugsquiz",
-    storageBucket: "kickdrugsquiz.appspot.com",
-    messagingSenderId: "318148898095",
-    appId: "1:318148898095:web:919faa00e0de4b595c05da",
-    measurementId: "G-7VTFER1D89"
-  };
+    apiKey: process.env.FB_API_KEY,
+    authDomain: process.env.FB_AUTH_DOMAIN,
+    projectId: process.env.FB_PROJECT_ID,
+    storageBucket: process.env.FB_STORAGE_BUCKET,
+    messagingSenderId: process.env.FB_MESSAGING_SENDER_ID,
+    appId: process.env.FB_APP_ID,
+    measurementId: process.env.FB_MEASUREMENT_ID
+};
 
 const firebaseApp = initializeApp(firebaseConfig);
+
 
 
 
