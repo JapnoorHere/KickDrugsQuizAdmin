@@ -1,78 +1,73 @@
 * {
-    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    overflow: hidden;
-    object-fit: contain;
-    background-image: url(logo.png);
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url('logo.png');
     background-blend-mode: soft-light;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: #fff20081;
+    background-color: rgba(255, 242, 0, 0.5); /* Adjusted background color transparency */
+    overflow-x: hidden; /* Ensures horizontal overflow is hidden */
+    min-height: 100vh; /* Ensures the body takes up at least the full viewport height */
 }
 
 .container {
-    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
 }
 
-.card{
-    background-color: rgba(255, 255, 255, 0.784);
-    width: 500px;
-    margin: 0 auto;
-    padding: 50px 10px 50px 10px;
-    margin-top: 130px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;  
+.card {
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 90%; /* Adjusted width to be responsive */
+    max-width: 500px; /* Maximum width for larger screens */
+    padding: 30px;
     border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     text-align: center;
     font-weight: 600;
+    margin-bottom: 20px;
 }
 
 form {
     display: flex;
-    justify-content: center;
     flex-direction: column;
-    width: 80%;
-    margin: 10px auto;
     gap: 20px;
 }
 
-input {
-    border: 0.5px solid rgb(187, 187, 187);
-    outline: none;
+input[type="text"],
+input[type="password"] {
     padding: 15px;
-    background-color: rgb(246, 246, 246);
-    border-radius: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f6f6f6;
+    outline: none;
+    transition: border-color 0.3s;
 }
 
-
-
-input[type="text"],
-input[type="password"]
-{
-    padding: 1rem;
-    border: 1px solid #000;
-    border-radius: 5px;
-    box-shadow: #6d96fe 0px 2px 5px;
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #6d96fe; /* Highlight border color on focus */
 }
 
 button {
     background-color: #6d96fe;
-    padding: 1rem;
     color: white;
     border: none;
     border-radius: 8px;
-    transition: all 0.2s ease-in-out;
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    border: none;
-    cursor: pointer;
-    background-color: rgb(0, 72, 229);
-    color: white;
+    background-color: #0048e5; /* Darker shade on hover */
 }
