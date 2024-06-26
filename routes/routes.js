@@ -6,7 +6,7 @@ const { User, Quiz } = require('../models/quiz')
 const admin = require("firebase-admin");
 const fs = require('fs');
 const excel = require('exceljs');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const { initializeApp } = require("firebase/app");
 const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
