@@ -25,13 +25,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 
-
-
-router.get('/', (req, res) => {
-    res.render("index", { message: undefined });
-})
-
-router.post('/details', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const data = await Admin.find().exec();
         const { username, password } = req.body;
@@ -39,10 +33,10 @@ router.post('/details', async (req, res) => {
         const admin = data[0];
 
         if (username == admin.username && password == admin.password) {
-            res.redirect('/home');
+            res.json({message : "done"});
         }
         else {
-            res.render('index', { message: "Password or username is incorrect" })
+            res.json({ message: "incorrect" });
         }
     }
     catch (err) {
@@ -54,7 +48,7 @@ router.post('/details', async (req, res) => {
 
 
 
-router.post('/uploadExcel', async (req, res) => {
+router.post('/home', async (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
@@ -82,7 +76,9 @@ router.post('/uploadExcel', async (req, res) => {
         () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                 console.log('File available at', downloadURL);
+                const uniqueID = moment().format('YYYYMMDD'); 
                 const quiz = new Quiz({
+                    _id : uniqueID,
                     quiz_name: filename
                 })
 
@@ -90,13 +86,13 @@ router.post('/uploadExcel', async (req, res) => {
                     console.log("count", count);
 
                     if (count > 0) {
-                        console.log("Exists");
-                        res.redirect('/home');
+                        
+                        res.json({message : 'exists'});
                     }
                     else {
                         quiz.save();
+                        res.json({message : 'done'});
                         Quiz.find().exec().then(quizzes => {
-                            res.redirect('/home');
                         });
 
                     }
@@ -107,6 +103,7 @@ router.post('/uploadExcel', async (req, res) => {
 });
 
 router.post('/getResult', async (req, res) => {
+    console.log(req.body);
     const quizId = req.body.quizId;
     try {
         const quiz = await Quiz.findById(quizId);
@@ -133,15 +130,16 @@ router.post('/getResult', async (req, res) => {
 
         await workbook.xlsx.write(res);
         res.end();
+        // res.json({message : "done   "});
     } catch (err) {
         console.error('Error:', err);
-        res.status(500).send('Internal Server Error');
+        // res.status(500).send('Internal Server Error');
     }
 })
 
 router.get('/home', async (req, res) => {
     const quiz = await Quiz.find().exec()
-    res.render('home', { quizzes: quiz.reverse() });
+    res.send(quiz.reverse());
 })
 
 module.exports = router
