@@ -11,16 +11,16 @@ const Home = () => {
   const location = useLocation();
   const { username } = location.state || {};
 
-  const getExcelData = ()=>{
+  const getExcelData = () => {
     axios.get('http://localhost:5000/home').then((res) => {
-      console.log(res.data)
+      console.log(res.data);
       setQuizzes(res.data);
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    getExcelData()
-  }, [])
+    getExcelData();
+  }, []);
 
   useEffect(() => {
     if (!username) {
@@ -33,20 +33,24 @@ const Home = () => {
   }
 
   const handleInput = (event) => {
-
     const file = event.target.files[0];
     setForm({
       ...form,
-      [event.target.name]: file
+      [event.target.name]: file,
     });
   };
 
   const handleGetResult = (id) => {
-    axios.post('http://localhost:5000/getResult', {
-      quizId: id
-    }, {
-      responseType: 'blob'
-    })
+    axios
+      .post(
+        'http://localhost:5000/getResult',
+        {
+          quizId: id,
+        },
+        {
+          responseType: 'blob',
+        }
+      )
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
@@ -55,7 +59,6 @@ const Home = () => {
         document.body.appendChild(link);
         link.click();
         link.remove();
-        
       })
       .catch((error) => {
         console.error('Error downloading the file:', error);
@@ -63,35 +66,33 @@ const Home = () => {
       });
   };
 
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const formData = new FormData();
     formData.append('excel', form.excel);
 
-    axios.post('http://localhost:5000/home', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then((res) => {
-      if (res.data.message === 'exists') {
-        alert('Quiz Exists')
-        fileInputRef.current.value = null;
-      }
-      else if (res.data.message === 'done') {
-        alert('Quiz Uploaded')
-        fileInputRef.current.value = null;
-        getExcelData();
-      }
-    })
-
+    axios
+      .post('http://localhost:5000/home', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        if (res.data.message === 'exists') {
+          alert('Quiz Exists');
+          fileInputRef.current.value = null;
+        } else if (res.data.message === 'done') {
+          alert('Quiz Uploaded');
+          fileInputRef.current.value = null;
+          getExcelData();
+        }
+      });
   };
 
   return (
     <div className='overflow-hidden bg-tan-light min-h-screen w-screen flex justify-center p-4'>
-      <div className='w-[700px] flex flex-col gap-4'>
+      <div className='max-w-2xl w-full flex flex-col gap-6 p-4'>
         <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 rounded-lg bg-tan-medium p-4'>
           <h1 className='text-2xl font-semibold'>Upload Quiz Excel File</h1>
           <input
@@ -101,21 +102,28 @@ const Home = () => {
             onChange={handleInput}
             ref={fileInputRef}
             required
+            className='p-2 border border-brown-dark rounded-sm'
           />
-          <button type='submit' className='self-end text-brown-dark w-fit px-6 py-2 bg-tan-dark hover:opacity-90 rounded-sm border border-transparent hover:border-brown-dark'>
+          <button
+            type='submit'
+            className='self-end text-brown-dark w-fit px-6 py-2 bg-tan-dark hover:opacity-90 rounded-sm border border-transparent hover:border-brown-dark'
+          >
             Submit
           </button>
         </form>
         <div className='flex flex-col gap-4'>
           <h1 className='text-4xl font-semibold text-brown-dark'>Results</h1>
-          {
-            quizzes.map((quiz) => (
-              <div className='rounded-md w-full p-4 bg-tan-medium flex justify-between items-center'>
-                <p className='text-xl font-medium'>{quiz.quiz_name}</p>
-                <button onClick={() => handleGetResult(quiz._id)} className='self-end text-brown-dark w-fit px-6 py-2 bg-tan-dark hover:opacity-90 rounded-sm border border-transparent hover:border-brown-dark'>Get results</button>
-              </div>
-            ))
-          }
+          {quizzes.map((quiz) => (
+            <div key={quiz._id} className='rounded-md w-full p-4 bg-tan-medium flex justify-between items-center'>
+              <p className='text-xl font-medium'>{quiz.quiz_name}</p>
+              <button
+                onClick={() => handleGetResult(quiz._id)}
+                className='self-end text-brown-dark w-fit px-6 py-2 bg-tan-dark hover:opacity-90 rounded-sm border border-transparent hover:border-brown-dark'
+              >
+                Get results
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
