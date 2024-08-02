@@ -13,7 +13,6 @@ const Home = () => {
 
   const getExcelData = () => {
     axios.get(`${process.env.REACT_APP_API_KEY}/home`).then((res) => {
-      console.log(res.data);
       setQuizzes(res.data);
     });
   };
@@ -61,7 +60,6 @@ const Home = () => {
         link.remove();
       })
       .catch((error) => {
-        console.error('Error downloading the file:', error);
         alert('Error downloading the file');
       });
   };
