@@ -17,7 +17,7 @@ const Login = () => {
   const submitData = (event)=>{
     event.preventDefault();
     console.log(form.username , form.password);
-    axios.post('http://localhost:5000/',{
+    axios.post(`${process.env.REACT_APP_API_KEY}/`,{
       username : form.username,
       password : form.password
     }).then((res)=>{

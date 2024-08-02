@@ -12,7 +12,7 @@ const Home = () => {
   const { username } = location.state || {};
 
   const getExcelData = () => {
-    axios.get('http://localhost:5000/home').then((res) => {
+    axios.get(`${process.env.REACT_APP_API_KEY}/home`).then((res) => {
       console.log(res.data);
       setQuizzes(res.data);
     });
@@ -43,7 +43,7 @@ const Home = () => {
   const handleGetResult = (id) => {
     axios
       .post(
-        'http://localhost:5000/getResult',
+        `${process.env.REACT_APP_API_KEY}/getResult`,
         {
           quizId: id,
         },
@@ -73,7 +73,7 @@ const Home = () => {
     formData.append('excel', form.excel);
 
     axios
-      .post('http://localhost:5000/home', formData, {
+      .post(`${process.env.REACT_APP_API_KEY}/home`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
