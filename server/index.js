@@ -30,7 +30,9 @@ app.use((req,res,next)=>{
     next()
 });
 
-app.use(cors());
+app.use(cors({
+    origin : '*'
+}));
 
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
